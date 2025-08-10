@@ -24,7 +24,7 @@ class TimeBot(discord.Client):
             status = " | ".join(parts)[:128]
             await self.change_presence(
                 activity=discord.Activity(
-                    type=discord.ActivityType.playing, name=status
+                    type=discord.ActivityType.watching, name=status
                 )
             )
             await asyncio.sleep(60)
