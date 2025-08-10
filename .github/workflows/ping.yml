@@ -1,0 +1,27 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *" # every 10 minutes (UTC)
+  workflow_dispatch: # allow manual run from Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Ping /healthz
+        env:
+          URL: ${{ vars.HEALTHZ_URL || 'https://meridian-bot-web.onrender.com/healthz' }}
+        run: |
+          echo "Pinging $URL"
+          for i in 1 2 3; do
+            if curl -fsS "$URL"; then
+              echo "OK"
+              exit 0
+            fi
+            echo "Attempt $i failed, retrying..."
+            sleep 5
+          done
+          echo "Ping failed after retries"
+          exit 1
