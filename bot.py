@@ -4,7 +4,11 @@ from zoneinfo import ZoneInfo
 import discord
 from aiohttp import web
 
-TIMEZONES = [("🇺🇸", "America/Chicago"), ("🇳🇴", "Europe/Oslo"), ("🇵🇭", "Asia/Manila")]
+TIMEZONES = [
+    (":flag_no:", "Europe/Oslo"),
+    (":flag_us:", "America/Chicago"),
+    (":flag_ph:", "Asia/Manila"),
+]
 FMT = "%H:%M"
 TOKEN = os.environ["DISCORD_TOKEN"]
 
