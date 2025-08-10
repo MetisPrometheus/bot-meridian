@@ -5,9 +5,9 @@ import discord
 from aiohttp import web
 
 TIMEZONES = [
-    (":flag_no:", "Europe/Oslo"),
-    (":flag_us:", "America/Chicago"),
-    (":flag_ph:", "Asia/Manila"),
+    "America/Chicago",  # Houston
+    "Europe/Oslo",  # Norway
+    "Asia/Manila",  # Philippines
 ]
 FMT = "%H:%M"
 TOKEN = os.environ["DISCORD_TOKEN"]
@@ -20,13 +20,11 @@ class TimeBot(discord.Client):
 
     async def _ticker(self):
         while True:
-            parts = [
-                f"{f} {datetime.now(ZoneInfo(t)).strftime(FMT)}" for f, t in TIMEZONES
-            ]
+            parts = [f"{datetime.now(ZoneInfo(t)).strftime(FMT)}" for t in TIMEZONES]
             status = " | ".join(parts)[:128]
             await self.change_presence(
                 activity=discord.Activity(
-                    type=discord.ActivityType.watching, name=status
+                    type=discord.ActivityType.playing, name=status
                 )
             )
             await asyncio.sleep(60)
