@@ -10,7 +10,8 @@ Useful when working with people from vastly different timezones.
 ## Using Render Free Tier To Keep App Running
 * Render free plan can’t run Background Workers 24/7
 * We run the bot as a Web Service with an HTTP health check endpoint
-* A **GitHub Actions workflow** pings this endpoint every ~10 minutes so Render doesn’t put it to sleep  
+* A **GitHub Actions workflow** pings this endpoint every ~10 minutes so Render doesn’t put it to sleep
+  
 
 ```mermaid
 flowchart TD
