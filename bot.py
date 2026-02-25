@@ -44,7 +44,11 @@ async def health(_):
         "time_utc": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     logging.info("Health hit: %s", data)
-    return web.json_response(data)
+    resp = web.json_response(data)
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 
 app = web.Application()

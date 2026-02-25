@@ -15,13 +15,13 @@ jobs:
           URL: ${{ vars.HEALTHZ_URL || 'https://meridian-bot-web.onrender.com/healthz' }}
         run: |
           echo "Pinging $URL"
-          for i in 1 2 3; do
-            if curl -fsS "$URL"; then
+          for i in 1 2 3 4 5; do
+            if curl -fsS --max-time 30 "$URL"; then
               echo "OK"
               exit 0
             fi
-            echo "Attempt $i failed, retrying..."
-            sleep 5
+            echo "Attempt $i failed, retrying in 15s..."
+            sleep 15
           done
           echo "Ping failed after retries"
           exit 1
