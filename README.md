@@ -9,8 +9,8 @@ The bot runs directly on the shared Hetzner box as `meridian-bot.service`.
 Systemd starts it at boot and restarts it after a crash. It needs no web server,
 public port, database, Render service or GitHub keepalive pings.
 
-Deployment files are prepared for Hetzner. Cutover requires installing the bot
-token and verifying the live Discord status before retiring the old Render host.
+Meridian is hosted on Hetzner. The former Render service is suspended, and the
+GitHub Actions keepalive workflow has been removed.
 
 ```bash
 # Clone this repository to /opt/projects/meridian, then provision:
@@ -29,11 +29,10 @@ file, the enabled service safely skips startup. The shared provisioner also
 creates its standard environment file and unused database roles; the bot does
 not use a database. The service has a 128 MB memory cap.
 
-For cutover, suspend the old Render service before starting this instance, then
-check that Meridian is online in Discord and its times advance across a minute.
-Retire Render and the legacy Actions pinger only after that check. The legacy
-`render.yaml` and pinger remain temporarily for rollback; do not re-enable them
-while the Hetzner instance is running.
+The suspended Render instance is retained only as a rollback option. Do not
+resume it while the Hetzner service is running; two instances would compete to
+set the same Discord presence. The old Render configuration is available in
+Git history.
 
 To deploy later updates, pull the reviewed code, install `requirements.txt` into
 `venv/`, run the tests, then restart `meridian-bot.service`.
