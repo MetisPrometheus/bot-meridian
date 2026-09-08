@@ -8,8 +8,8 @@ from bot import TimeBot, timezone_status
 
 class StatusTests(unittest.TestCase):
     def test_winter_and_summer_offsets(self):
-        self.assertEqual(timezone_status(datetime(2026, 1, 1, 12, tzinfo=timezone.utc)), "07:00 | 13:00")
-        self.assertEqual(timezone_status(datetime(2026, 7, 1, 12, tzinfo=timezone.utc)), "08:00 | 14:00")
+        self.assertEqual(timezone_status(datetime(2026, 1, 1, 12, tzinfo=timezone.utc)), "🇺🇸 07:00 | 🇳🇴 13:00")
+        self.assertEqual(timezone_status(datetime(2026, 7, 1, 12, tzinfo=timezone.utc)), "🇺🇸 08:00 | 🇳🇴 14:00")
 
 
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
@@ -27,10 +27,10 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         bot = TimeBot(intents=discord.Intents.none())
         bot.wait_until_ready = AsyncMock()
         bot.change_presence = AsyncMock()
-        with patch('bot.timezone_status', return_value='12:00 | 18:00'):
+        with patch('bot.timezone_status', return_value='🇺🇸 12:00 | 🇳🇴 18:00'):
             await bot.ticker()
         bot.wait_until_ready.assert_awaited_once()
         kwargs = bot.change_presence.call_args.kwargs
         self.assertEqual(kwargs['status'], discord.Status.online)
-        self.assertEqual(kwargs['activity'].name, '12:00 | 18:00')
+        self.assertEqual(kwargs['activity'].name, '🇺🇸 12:00 | 🇳🇴 18:00')
         await bot.close()

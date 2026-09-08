@@ -8,12 +8,15 @@ from zoneinfo import ZoneInfo
 import discord
 from discord.ext import tasks
 
-TIMEZONES = ["America/Toronto", "Europe/Oslo"]
+TIMEZONES = [("🇺🇸", "America/Toronto"), ("🇳🇴", "Europe/Oslo")]
 
 
 def timezone_status(now=None):
     now = now or datetime.now(ZoneInfo("UTC"))
-    return " | ".join(now.astimezone(ZoneInfo(t)).strftime("%H:%M") for t in TIMEZONES)
+    return " | ".join(
+        f"{flag} {now.astimezone(ZoneInfo(zone)):%H:%M}"
+        for flag, zone in TIMEZONES
+    )
 
 
 class TimeBot(discord.Client):
