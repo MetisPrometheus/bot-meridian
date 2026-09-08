@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 import discord
 from discord.ext import tasks
 
-TIMEZONES = ["America/Chicago", "Europe/Oslo", "Asia/Manila"]
+TIMEZONES = ["America/Toronto", "Europe/Oslo"]
 
 
 def timezone_status(now=None):

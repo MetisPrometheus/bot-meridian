@@ -1,7 +1,8 @@
 # Meridian timezone bot
 
-A personal Discord bot displaying Chicago, Oslo and Manila times in its status,
-updated every minute. Python's timezone database handles daylight saving time.
+A personal Discord bot displaying Montreal time on the left and Norway time on the right,
+updated every minute. Montreal uses `America/Toronto` and Norway uses
+`Europe/Oslo`; Python's timezone database handles daylight saving time.
 
 ## Hetzner hosting
 
