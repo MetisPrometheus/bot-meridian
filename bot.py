@@ -1,77 +1,57 @@
-import os, asyncio, logging
+"""Meridian's timezone presence, hosted as a systemd service."""
+import logging
+import os
 from datetime import datetime
+from pathlib import Path
 from zoneinfo import ZoneInfo
+
 import discord
-from aiohttp import web
+from discord.ext import tasks
 
 TIMEZONES = ["America/Chicago", "Europe/Oslo", "Asia/Manila"]
-FMT = "%H:%M"
-TOKEN = os.environ["DISCORD_TOKEN"]
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
+
+def timezone_status(now=None):
+    now = now or datetime.now(ZoneInfo("UTC"))
+    return " | ".join(now.astimezone(ZoneInfo(t)).strftime("%H:%M") for t in TIMEZONES)
 
 
 class TimeBot(discord.Client):
+    async def setup_hook(self):
+        # setup_hook runs once at login; on_ready can repeat after reconnects.
+        self.ticker.start()
+
     async def on_ready(self):
         logging.info("Logged in as %s (%s)", self.user, self.user.id)
-        asyncio.create_task(self._ticker())
 
-    async def _ticker(self):
-        while True:
-            try:
-                parts = [datetime.now(ZoneInfo(t)).strftime(FMT) for t in TIMEZONES]
-                status = " | ".join(parts)[:128]
-                await self.change_presence(
-                    status=discord.Status.online,  # make sure it shows as Online
-                    activity=discord.Activity(
-                        type=discord.ActivityType.playing, name=status
-                    ),
-                )
-                logging.info("Presence set: %s", status)
-            except Exception:
-                logging.exception("Ticker iteration failed")
-            await asyncio.sleep(60)
+    @tasks.loop(seconds=60)
+    async def ticker(self):
+        await self.wait_until_ready()
+        status = timezone_status()
+        await self.change_presence(
+            status=discord.Status.online,
+            activity=discord.Activity(type=discord.ActivityType.playing, name=status),
+        )
+        logging.info("Presence sent: %s", status)
 
+    @ticker.error
+    async def ticker_error(self, error):
+        logging.error("Presence loop failed", exc_info=(type(error), error, error.__traceback__))
+        # Close the client so systemd starts a fresh process instead of leaving
+        # a connected bot whose timezone display never advances.
+        await self.close()
 
-bot = TimeBot(intents=discord.Intents.none())
-
-
-# --- tiny web app (keepalive + state) ---
-async def health(_):
-    data = {
-        "bot_ready": bot.is_ready(),
-        "latency_sec": getattr(bot, "latency", None),
-        "time_utc": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-    }
-    logging.info("Health hit: %s", data)
-    resp = web.json_response(data)
-    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    resp.headers["Pragma"] = "no-cache"
-    resp.headers["Expires"] = "0"
-    return resp
+    async def close(self):
+        self.ticker.cancel()
+        await super().close()
 
 
-app = web.Application()
-app.router.add_get("/", health)
-app.router.add_get("/healthz", health)
-
-
-async def run_bot_forever():
-    while True:
-        try:
-            await bot.start(TOKEN, reconnect=True)
-        except Exception:
-            logging.exception("Bot crashed; restarting in 10s")
-            await asyncio.sleep(10)
-
-
-async def main():
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", int(os.getenv("PORT", "10000")))
-    await site.start()
-    await run_bot_forever()
+def read_token():
+    if token := os.environ.get("DISCORD_TOKEN"):
+        return token.strip()
+    return (Path(os.environ["CREDENTIALS_DIRECTORY"]) / "discord-token").read_text().strip()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
+    TimeBot(intents=discord.Intents.none()).run(read_token(), log_handler=None)

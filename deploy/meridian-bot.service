@@ -1,0 +1,30 @@
+[Unit]
+Description=Meridian Discord timezone bot
+Wants=network-online.target
+After=network-online.target
+ConditionFileNotEmpty=/etc/meridian/discord-token
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=meridian
+Group=meridian
+WorkingDirectory=/opt/projects/meridian
+EnvironmentFile=/etc/meridian/env
+LoadCredential=discord-token:/etc/meridian/discord-token
+ExecStart=/opt/projects/meridian/venv/bin/python /opt/projects/meridian/bot.py
+Restart=always
+RestartSec=15
+MemoryMax=128M
+TasksMax=32
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+Environment=PYTHONDONTWRITEBYTECODE=1
+
+[Install]
+WantedBy=multi-user.target
