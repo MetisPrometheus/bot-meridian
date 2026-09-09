@@ -1,9 +1,8 @@
 # Meridian timezone bot
 
-A personal Discord bot displaying Montreal time on the left and Norway time on the right,
-updated every minute: `🇺🇸 HH:MM | 🇳🇴 HH:MM`. The left clock uses the US flag
-by preference while keeping Montreal time. Montreal uses `America/Toronto` and Norway uses
-`Europe/Oslo`; Python's timezone database handles daylight saving time.
+A personal Discord bot displaying US Pacific time on the left and Norway time on the right,
+updated every minute: `🇺🇸 HH:MM | 🇳🇴 HH:MM`. Pacific uses `America/Los_Angeles`
+and Norway uses `Europe/Oslo`; Python's timezone database handles daylight saving time.
 
 ## Hetzner hosting
 

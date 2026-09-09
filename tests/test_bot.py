@@ -8,8 +8,8 @@ from bot import TimeBot, timezone_status
 
 class StatusTests(unittest.TestCase):
     def test_winter_and_summer_offsets(self):
-        self.assertEqual(timezone_status(datetime(2026, 1, 1, 12, tzinfo=timezone.utc)), "🇺🇸 07:00 | 🇳🇴 13:00")
-        self.assertEqual(timezone_status(datetime(2026, 7, 1, 12, tzinfo=timezone.utc)), "🇺🇸 08:00 | 🇳🇴 14:00")
+        self.assertEqual(timezone_status(datetime(2026, 1, 1, 12, tzinfo=timezone.utc)), "🇺🇸 04:00 | 🇳🇴 13:00")
+        self.assertEqual(timezone_status(datetime(2026, 7, 1, 12, tzinfo=timezone.utc)), "🇺🇸 05:00 | 🇳🇴 14:00")
 
 
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
