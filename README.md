@@ -7,12 +7,10 @@ Norway uses `Europe/Oslo`; Python's timezone database handles daylight saving ti
 
 ## Hetzner hosting
 
-The bot runs directly on the shared Hetzner box as `meridian-bot.service`.
-Systemd starts it at boot and restarts it after a crash. It needs no web server,
-public port, database, Render service or GitHub keepalive pings.
-
-Meridian is hosted on Hetzner. The former Render service is suspended, and the
-GitHub Actions keepalive workflow has been removed.
+The bot runs on the shared Hetzner box as `meridian-bot.service`. Systemd
+starts it at boot and restarts it after a crash. It needs no web server, public
+port, database, Render service or GitHub keepalive pings (the former Render
+service is suspended and the keepalive workflow was removed).
 
 ```bash
 # Clone this repository to /opt/projects/meridian, then provision:
