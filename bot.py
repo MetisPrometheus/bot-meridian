@@ -8,8 +8,7 @@ from zoneinfo import ZoneInfo
 import discord
 from discord.ext import tasks
 
-# Las Vegas is on US Pacific time; the tz database has no America/Las_Vegas zone.
-TIMEZONES = [("🇺🇸", "America/Los_Angeles"), ("🇳🇴", "Europe/Oslo")]
+TIMEZONES = [("🇺🇸", "America/New_York"), ("🇳🇴", "Europe/Oslo")]
 
 
 def timezone_status(now=None):

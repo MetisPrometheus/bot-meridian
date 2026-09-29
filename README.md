@@ -1,9 +1,9 @@
 # Meridian timezone bot
 
-A personal Discord bot displaying Las Vegas time on the left and Norway time on the right,
-updated every minute: `🇺🇸 HH:MM | 🇳🇴 HH:MM`. Las Vegas is on US Pacific time, so it uses
-the `America/Los_Angeles` zone (the tz database has no separate Las Vegas entry), and
-Norway uses `Europe/Oslo`; Python's timezone database handles daylight saving time.
+A personal Discord bot displaying U.S. Eastern time on the left and Norway time on the right,
+updated every minute: `🇺🇸 HH:MM | 🇳🇴 HH:MM`. It uses `America/New_York` for
+Eastern time and `Europe/Oslo` for Norway; Python's timezone database handles
+daylight saving time in both places.
 
 ## Hetzner hosting
 
